@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英単語学習アプリ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            padding: 30px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .word-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        .word-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .word-card.flipped {
+            background: #e3f2fd;
+            border-color: #667eea;
+        }
+
+        .word-english {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .word-meaning {
+            font-size: 16px;
+            color: #333;
+            text-align: center;
+            line-height: 1.6;
+            display: none;
+        }
+
+        .word-card.flipped .word-meaning {
+            display: block;
+        }
+
+        .word-card.flipped .word-english::after {
+            content: " (タップして隠す)";
+            font-size: 12px;
+            color: #999;
+        }
+
+        .word-english::after {
+            content: " (タップして意味を表示)";
+            font-size: 12px;
+            color: #999;
+            display: block;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: #764ba2;
+        }
+
+        button.secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        button.secondary:hover {
+            background: #d0d0d0;
+        }
+
+        .counter {
+            text-align: center;
+            color: #999;
+            font-size: 12px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px 15px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .word-card {
+                padding: 15px;
+            }
+
+            .word-english {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 英単語学習</h1>
+            <p>単語をタップして意味を確認しましょう</p>
+        </div>
+
+        <div id="wordsList"></div>
+
+        <div class="controls">
+            <button class="secondary" onclick="resetAllCards()">すべてリセット</button>
+            <button onclick="shuffleWords()">シャッフル</button>
+        </div>
+
+        <div class="counter">
+            <span id="learnedCount">0</span> / <span id="totalCount">0</span> 単語を確認
+        </div>
+    </div>
+
+    <script>
+        const words = [
+            { english: "Hello", meaning: "こんにちは" },
+            { english: "World", meaning: "世界" },
+            { english: "Book", meaning: "本" },
+            { english: "Teacher", meaning: "先生" },
+            { english: "Student", meaning: "学生" },
+            { english: "Computer", meaning: "コンピュータ" },
+            { english: "Language", meaning: "言語" },
+            { english: "Learning", meaning: "学習" },
+            { english: "Practice", meaning: "練習" },
+            { english: "Success", meaning: "成功" }
+        ];
+
+        let cardStates = {};
+
+        function initializeApp() {
+            document.getElementById('totalCount').textContent = words.length;
+            renderWords();
+        }
+
+        function renderWords() {
+            const wordsList = document.getElementById('wordsList');
+            wordsList.innerHTML = '';
+
+            words.forEach((word, index) => {
+                const card = document.createElement('div');
+                card.className = 'word-card';
+                if (cardStates[index]) {
+                    card.classList.add('flipped');
+                }
+
+                card.innerHTML = `
+                    <div class="word-english">${word.english}</div>
+                    <div class="word-meaning">${word.meaning}</div>
+                `;
+
+                card.onclick = () => toggleCard(index, card);
+                wordsList.appendChild(card);
+            });
+
+            updateCounter();
+        }
+
+        function toggleCard(index, card) {
+            cardStates[index] = !cardStates[index];
+            card.classList.toggle('flipped');
+            updateCounter();
+        }
+
+        function resetAllCards() {
+            cardStates = {};
+            renderWords();
+        }
+
+        function shuffleWords() {
+            for (let i = words.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [words[i], words[j]] = [words[j], words[i]];
+            }
+            resetAllCards();
+        }
+
+        function updateCounter() {
+            const learned = Object.values(cardStates).filter(v => v).length;
+            document.getElementById('learnedCount').textContent = learned;
+        }
+
+        // アプリ初期化
+        initializeApp();
+    </script>
+</body>
+</html>
