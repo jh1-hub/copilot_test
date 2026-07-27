@@ -6,7 +6,14 @@ let lessonStartTime = null;
 let userAnswers = [];
 
 // 音声再生関数
-function speakEnglish(text) {
+function speakEnglish(text, buttonElement) {
+    // ボタンを無効化
+    if (buttonElement) {
+        buttonElement.disabled = true;
+        buttonElement.style.opacity = '0.5';
+        buttonElement.style.backgroundColor = '#999';
+    }
+    
     // 既存の読み上げをキャンセル
     speechSynthesis.cancel();
     
@@ -14,6 +21,16 @@ function speakEnglish(text) {
     utterance.lang = 'en-US';
     utterance.rate = 0.85; // ゆっくり目
     utterance.pitch = 1.0;
+    
+    // 読み上げ終了後にボタンを復旧
+    utterance.onend = () => {
+        if (buttonElement) {
+            buttonElement.disabled = false;
+            buttonElement.style.opacity = '1';
+            buttonElement.style.backgroundColor = '';
+        }
+    };
+    
     speechSynthesis.speak(utterance);
 }
 
@@ -177,7 +194,7 @@ function renderFlashcard(question, container) {
     speakBtn.title = '発音を聞く';
     speakBtn.onclick = (e) => {
         e.stopPropagation();
-        speakEnglish(question.english);
+        speakEnglish(question.english, speakBtn);
     };
     
     cardWrapper.appendChild(speakBtn);
@@ -197,7 +214,7 @@ function renderChoice(question, container, nextBtn) {
     speakBtn.textContent = '🔊';
     speakBtn.title = '発音を聞く';
     speakBtn.onclick = () => {
-        speakEnglish(question.question);
+        speakEnglish(question.question, speakBtn);
     };
     
     const questionText = document.createElement('div');
@@ -223,7 +240,7 @@ function renderChoice(question, container, nextBtn) {
         optionSpeakBtn.title = '発音を聞く';
         optionSpeakBtn.onclick = (e) => {
             e.stopPropagation();
-            speakEnglish(option);
+            speakEnglish(option, optionSpeakBtn);
         };
         
         const btn = document.createElement('button');
