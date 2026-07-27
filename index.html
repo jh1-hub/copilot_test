@@ -48,10 +48,11 @@
         .home-header h1 {
             font-size: 32px;
             margin-bottom: 10px;
+            color: #1a1a1a;
         }
 
         .home-header p {
-            color: #666;
+            color: #555;
             font-size: 14px;
         }
 
@@ -63,18 +64,19 @@
         }
 
         .stat-card {
-            background: #f8f9fa;
+            background: #f5f5f5;
             border-radius: 10px;
             padding: 15px;
             text-align: center;
-            border: 2px solid #e0e0e0;
+            border: 2px solid #d0d0d0;
         }
 
         .stat-card h3 {
             font-size: 12px;
-            color: #999;
+            color: #555;
             margin-bottom: 8px;
             text-transform: uppercase;
+            font-weight: 600;
         }
 
         .stat-card .value {
@@ -90,7 +92,8 @@
         .daily-progress h3 {
             font-size: 14px;
             margin-bottom: 10px;
-            color: #333;
+            color: #1a1a1a;
+            font-weight: 600;
         }
 
         .progress-bar {
@@ -115,8 +118,8 @@
         }
 
         .lesson-btn {
-            background: #f8f9fa;
-            border: 2px solid #e0e0e0;
+            background: #f5f5f5;
+            border: 2px solid #d0d0d0;
             border-radius: 10px;
             padding: 15px;
             text-align: left;
@@ -124,6 +127,7 @@
             transition: all 0.3s ease;
             font-size: 16px;
             font-weight: 500;
+            color: #1a1a1a;
         }
 
         .lesson-btn:hover:not(:disabled) {
@@ -140,11 +144,13 @@
         .lesson-btn .lesson-title {
             display: block;
             margin-bottom: 5px;
+            color: #1a1a1a;
+            font-weight: 600;
         }
 
         .lesson-btn .lesson-status {
             font-size: 12px;
-            color: #999;
+            color: #666;
         }
 
         /* ===== レッスン画面 ===== */
@@ -162,11 +168,12 @@
             align-items: center;
             margin-bottom: 20px;
             padding-bottom: 15px;
-            border-bottom: 2px solid #f0f0f0;
+            border-bottom: 2px solid #e0e0e0;
         }
 
         .lesson-header h2 {
             font-size: 20px;
+            color: #1a1a1a;
         }
 
         .lesson-close {
@@ -181,6 +188,7 @@
             align-items: center;
             justify-content: center;
             transition: background 0.3s ease;
+            color: #333;
         }
 
         .lesson-close:hover {
@@ -226,8 +234,9 @@
             font-weight: 500;
             text-align: center;
             line-height: 1.6;
-            color: #333;
+            color: #1a1a1a;
             flex: 1;
+            margin-bottom: 20px;
         }
 
         .options {
@@ -237,15 +246,16 @@
         }
 
         .option-btn {
-            background: #f8f9fa;
-            border: 2px solid #e0e0e0;
+            background: #f5f5f5;
+            border: 2px solid #d0d0d0;
             border-radius: 10px;
             padding: 15px;
             text-align: left;
             cursor: pointer;
             transition: all 0.3s ease;
             font-size: 16px;
-            color: #333;
+            color: #1a1a1a;
+            font-weight: 500;
             flex: 1;
         }
 
@@ -262,13 +272,13 @@
         .option-btn.correct {
             border-color: #4caf50;
             background: #e8f5e9;
-            color: #2e7d32;
+            color: #1b5e20;
         }
 
         .option-btn.incorrect {
             border-color: #f44336;
             background: #ffebee;
-            color: #c62828;
+            color: #b71c1c;
         }
 
         .flashcard {
@@ -296,23 +306,26 @@
             font-size: 28px;
             font-weight: bold;
             letter-spacing: 1px;
+            color: #ffffff;
         }
 
         .flashcard-back {
             font-size: 22px;
             letter-spacing: 0.5px;
+            color: #ffffff;
         }
 
         .flashcard-hint {
             font-size: 14px;
-            opacity: 0.9;
+            opacity: 0.95;
             margin-top: 15px;
+            color: #e3f2fd;
         }
 
         /* ===== 発音ボタン ===== */
         .speak-btn {
             background: #ffc107;
-            color: white;
+            color: #333;
             border: none;
             padding: 8px 12px;
             border-radius: 50%;
@@ -326,9 +339,10 @@
             transition: all 0.3s ease;
             box-shadow: 0 2px 8px rgba(255, 193, 7, 0.3);
             flex-shrink: 0;
+            font-weight: bold;
         }
 
-        .speak-btn:hover {
+        .speak-btn:hover:not(:disabled) {
             background: #ffb300;
             transform: scale(1.1);
             box-shadow: 0 4px 12px rgba(255, 193, 7, 0.5);
@@ -338,9 +352,16 @@
             transform: scale(0.95);
         }
 
+        .speak-btn:disabled {
+            background: #999;
+            color: #f5f5f5;
+            cursor: not-allowed;
+            box-shadow: 0 2px 6px rgba(153, 153, 153, 0.3);
+        }
+
         .speak-btn-small {
             background: #ffc107;
-            color: white;
+            color: #333;
             border: none;
             padding: 6px 8px;
             border-radius: 50%;
@@ -354,15 +375,23 @@
             transition: all 0.3s ease;
             box-shadow: 0 2px 6px rgba(255, 193, 7, 0.3);
             flex-shrink: 0;
+            font-weight: bold;
         }
 
-        .speak-btn-small:hover {
+        .speak-btn-small:hover:not(:disabled) {
             background: #ffb300;
             transform: scale(1.1);
         }
 
         .speak-btn-small:active {
             transform: scale(0.95);
+        }
+
+        .speak-btn-small:disabled {
+            background: #999;
+            color: #f5f5f5;
+            cursor: not-allowed;
+            box-shadow: 0 2px 6px rgba(153, 153, 153, 0.3);
         }
 
         /* ===== 結果画面 ===== */
@@ -378,6 +407,10 @@
             text-align: center;
         }
 
+        .result-content h2 {
+            color: #1a1a1a;
+        }
+
         .result-score {
             font-size: 48px;
             font-weight: bold;
@@ -388,22 +421,24 @@
         .result-message {
             font-size: 18px;
             margin-bottom: 30px;
-            color: #333;
+            color: #1a1a1a;
+            font-weight: 500;
         }
 
         .result-details {
-            background: #f8f9fa;
+            background: #f5f5f5;
             border-radius: 10px;
             padding: 20px;
             margin-bottom: 30px;
             text-align: left;
+            border: 1px solid #d0d0d0;
         }
 
         .detail-row {
             display: flex;
             justify-content: space-between;
             padding: 10px 0;
-            border-bottom: 1px solid #e0e0e0;
+            border-bottom: 1px solid #d0d0d0;
         }
 
         .detail-row:last-child {
@@ -411,12 +446,13 @@
         }
 
         .detail-label {
-            color: #666;
+            color: #555;
+            font-weight: 500;
         }
 
         .detail-value {
             font-weight: bold;
-            color: #333;
+            color: #1a1a1a;
         }
 
         /* ===== ボタン ===== */
@@ -436,7 +472,7 @@
             border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
-            font-weight: 500;
+            font-weight: 600;
             transition: all 0.3s ease;
         }
 
@@ -452,14 +488,15 @@
         }
 
         button.secondary {
-            background: #e0e0e0;
-            color: #333;
-        }
-
-        button.secondary:hover {
             background: #d0d0d0;
+            color: #1a1a1a;
         }
 
+        button.secondary:hover:not(:disabled) {
+            background: #b8b8b8;
+        }
+
+        /* ===== レスポンシブ ===== */
         @media (max-width: 480px) {
             .container {
                 padding: 20px 15px;
@@ -523,7 +560,7 @@
                 <div class="progress-bar">
                     <div class="progress-fill" id="dailyProgressFill"></div>
                 </div>
-                <p style="font-size: 12px; color: #999; margin-top: 5px;">
+                <p style="font-size: 12px; color: #666; margin-top: 5px;">
                     <span id="completedToday">0</span> / <span id="totalLessonsCount">0</span> レッスン完了
                 </p>
             </div>
