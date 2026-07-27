@@ -224,10 +224,10 @@
         .question-text {
             font-size: 18px;
             font-weight: 500;
-            margin-bottom: 20px;
             text-align: center;
             line-height: 1.6;
             color: #333;
+            flex: 1;
         }
 
         .options {
@@ -246,6 +246,7 @@
             transition: all 0.3s ease;
             font-size: 16px;
             color: #333;
+            flex: 1;
         }
 
         .option-btn:hover {
@@ -284,6 +285,7 @@
             align-items: center;
             transition: transform 0.3s ease;
             box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+            flex: 1;
         }
 
         .flashcard:hover {
@@ -305,6 +307,62 @@
             font-size: 14px;
             opacity: 0.9;
             margin-top: 15px;
+        }
+
+        /* ===== 発音ボタン ===== */
+        .speak-btn {
+            background: #ffc107;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            min-width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(255, 193, 7, 0.3);
+            flex-shrink: 0;
+        }
+
+        .speak-btn:hover {
+            background: #ffb300;
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(255, 193, 7, 0.5);
+        }
+
+        .speak-btn:active {
+            transform: scale(0.95);
+        }
+
+        .speak-btn-small {
+            background: #ffc107;
+            color: white;
+            border: none;
+            padding: 6px 8px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 14px;
+            min-width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 6px rgba(255, 193, 7, 0.3);
+            flex-shrink: 0;
+        }
+
+        .speak-btn-small:hover {
+            background: #ffb300;
+            transform: scale(1.1);
+        }
+
+        .speak-btn-small:active {
+            transform: scale(0.95);
         }
 
         /* ===== 結果画面 ===== */
@@ -429,6 +487,13 @@
 
             .flashcard-back {
                 font-size: 18px;
+            }
+
+            .speak-btn {
+                padding: 6px 10px;
+                font-size: 18px;
+                min-width: 40px;
+                height: 40px;
             }
         }
     </style>
