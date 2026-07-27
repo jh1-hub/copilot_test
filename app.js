@@ -5,6 +5,18 @@ let currentQuestionIndex = 0;
 let lessonStartTime = null;
 let userAnswers = [];
 
+// 音声再生関数
+function speakEnglish(text) {
+    // 既存の読み上げをキャンセル
+    speechSynthesis.cancel();
+    
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.85; // ゆっくり目
+    utterance.pitch = 1.0;
+    speechSynthesis.speak(utterance);
+}
+
 // 画面遷移管理
 function showScreen(screenName) {
     document.getElementById('homeScreen').classList.remove('active');
@@ -124,6 +136,12 @@ function renderLesson() {
 }
 
 function renderFlashcard(question, container) {
+    const cardWrapper = document.createElement('div');
+    cardWrapper.style.display = 'flex';
+    cardWrapper.style.alignItems = 'center';
+    cardWrapper.style.justifyContent = 'center';
+    cardWrapper.style.gap = '10px';
+    
     const card = document.createElement('div');
     card.className = 'flashcard';
     
@@ -152,25 +170,71 @@ function renderFlashcard(question, container) {
         }
     };
     
-    container.appendChild(card);
+    // 発音ボタン
+    const speakBtn = document.createElement('button');
+    speakBtn.className = 'speak-btn';
+    speakBtn.textContent = '🔊';
+    speakBtn.title = '発音を聞く';
+    speakBtn.onclick = (e) => {
+        e.stopPropagation();
+        speakEnglish(question.english);
+    };
+    
+    cardWrapper.appendChild(speakBtn);
+    cardWrapper.appendChild(card);
+    container.appendChild(cardWrapper);
 }
 
 function renderChoice(question, container, nextBtn) {
+    const questionWrapper = document.createElement('div');
+    questionWrapper.style.display = 'flex';
+    questionWrapper.style.alignItems = 'flex-start';
+    questionWrapper.style.justifyContent = 'center';
+    questionWrapper.style.gap = '10px';
+    
+    const speakBtn = document.createElement('button');
+    speakBtn.className = 'speak-btn';
+    speakBtn.textContent = '🔊';
+    speakBtn.title = '発音を聞く';
+    speakBtn.onclick = () => {
+        speakEnglish(question.question);
+    };
+    
     const questionText = document.createElement('div');
     questionText.className = 'question-text';
     questionText.textContent = question.question;
-    container.appendChild(questionText);
+    
+    questionWrapper.appendChild(speakBtn);
+    questionWrapper.appendChild(questionText);
+    container.appendChild(questionWrapper);
     
     const options = document.createElement('div');
     options.className = 'options';
     
     question.options.forEach((option, idx) => {
+        const optionWrapper = document.createElement('div');
+        optionWrapper.style.display = 'flex';
+        optionWrapper.style.alignItems = 'center';
+        optionWrapper.style.gap = '10px';
+        
+        const optionSpeakBtn = document.createElement('button');
+        optionSpeakBtn.className = 'speak-btn-small';
+        optionSpeakBtn.textContent = '🔊';
+        optionSpeakBtn.title = '発音を聞く';
+        optionSpeakBtn.onclick = (e) => {
+            e.stopPropagation();
+            speakEnglish(option);
+        };
+        
         const btn = document.createElement('button');
         btn.className = 'option-btn';
         btn.textContent = option;
         
         btn.onclick = () => selectOption(idx, question.correct, btn, question, nextBtn);
-        options.appendChild(btn);
+        
+        optionWrapper.appendChild(optionSpeakBtn);
+        optionWrapper.appendChild(btn);
+        options.appendChild(optionWrapper);
     });
     
     container.appendChild(options);
@@ -180,14 +244,14 @@ function selectOption(selectedIdx, correctIdx, btn, question, nextBtn) {
     const isCorrect = selectedIdx === correctIdx;
     
     // フィードバック表示
-    const options = btn.parentElement.querySelectorAll('.option-btn');
-    options.forEach(b => b.disabled = true);
+    const optionBtns = Array.from(btn.parentElement.parentElement.querySelectorAll('.option-btn'));
+    optionBtns.forEach(b => b.disabled = true);
     
     if (isCorrect) {
         btn.classList.add('correct');
     } else {
         btn.classList.add('incorrect');
-        options[correctIdx].classList.add('correct');
+        optionBtns[correctIdx].classList.add('correct');
     }
     
     userAnswers.push({
