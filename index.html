@@ -227,6 +227,7 @@
             margin-bottom: 20px;
             text-align: center;
             line-height: 1.6;
+            color: #333;
         }
 
         .options {
@@ -244,6 +245,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
             font-size: 16px;
+            color: #333;
         }
 
         .option-btn:hover {
@@ -259,15 +261,17 @@
         .option-btn.correct {
             border-color: #4caf50;
             background: #e8f5e9;
+            color: #2e7d32;
         }
 
         .option-btn.incorrect {
             border-color: #f44336;
             background: #ffebee;
+            color: #c62828;
         }
 
         .flashcard {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
             color: white;
             border-radius: 10px;
             padding: 40px 20px;
@@ -279,6 +283,7 @@
             justify-content: center;
             align-items: center;
             transition: transform 0.3s ease;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
         }
 
         .flashcard:hover {
@@ -286,17 +291,19 @@
         }
 
         .flashcard-front {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: bold;
+            letter-spacing: 1px;
         }
 
         .flashcard-back {
-            font-size: 20px;
+            font-size: 22px;
+            letter-spacing: 0.5px;
         }
 
         .flashcard-hint {
-            font-size: 12px;
-            opacity: 0.8;
+            font-size: 14px;
+            opacity: 0.9;
             margin-top: 15px;
         }
 
@@ -414,6 +421,14 @@
 
             .result-score {
                 font-size: 36px;
+            }
+
+            .flashcard-front {
+                font-size: 24px;
+            }
+
+            .flashcard-back {
+                font-size: 18px;
             }
         }
     </style>
