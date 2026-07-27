@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>英単語学習アプリ</title>
+    <title>全商英検3級対策アプリ</title>
     <style>
         * {
             margin: 0;
@@ -19,90 +19,343 @@
             justify-content: center;
             align-items: center;
             padding: 10px;
+            color: #333;
         }
 
         .container {
             width: 100%;
-            max-width: 500px;
+            max-width: 600px;
             background: white;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             padding: 30px 20px;
         }
 
-        .header {
+        /* ===== ホーム画面 ===== */
+        #homeScreen {
+            display: none;
+        }
+
+        #homeScreen.active {
+            display: block;
+        }
+
+        .home-header {
             text-align: center;
             margin-bottom: 30px;
         }
 
-        .header h1 {
-            color: #333;
-            font-size: 28px;
+        .home-header h1 {
+            font-size: 32px;
             margin-bottom: 10px;
         }
 
-        .header p {
+        .home-header p {
             color: #666;
             font-size: 14px;
         }
 
-        .word-card {
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
             background: #f8f9fa;
             border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 15px;
-            cursor: pointer;
+            padding: 15px;
+            text-align: center;
             border: 2px solid #e0e0e0;
-            transition: all 0.3s ease;
         }
 
-        .word-card:hover {
-            border-color: #667eea;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        .stat-card h3 {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 8px;
+            text-transform: uppercase;
         }
 
-        .word-card.flipped {
-            background: #e3f2fd;
-            border-color: #667eea;
-        }
-
-        .word-english {
-            font-size: 24px;
+        .stat-card .value {
+            font-size: 28px;
             font-weight: bold;
             color: #667eea;
-            margin-bottom: 15px;
-            text-align: center;
         }
 
-        .word-meaning {
-            font-size: 16px;
+        .daily-progress {
+            margin-bottom: 30px;
+        }
+
+        .daily-progress h3 {
+            font-size: 14px;
+            margin-bottom: 10px;
             color: #333;
-            text-align: center;
-            line-height: 1.6;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .lessons-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .lesson-btn {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .lesson-btn:hover:not(:disabled) {
+            border-color: #667eea;
+            transform: translateX(5px);
+            background: #f0f4ff;
+        }
+
+        .lesson-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .lesson-btn .lesson-title {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .lesson-btn .lesson-status {
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* ===== レッスン画面 ===== */
+        #lessonScreen {
             display: none;
         }
 
-        .word-card.flipped .word-meaning {
+        #lessonScreen.active {
             display: block;
         }
 
-        .word-card.flipped .word-english::after {
-            content: " (タップして隠す)";
-            font-size: 12px;
-            color: #999;
+        .lesson-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
         }
 
-        .word-english::after {
-            content: " (タップして意味を表示)";
+        .lesson-header h2 {
+            font-size: 20px;
+        }
+
+        .lesson-close {
+            background: #e0e0e0;
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease;
+        }
+
+        .lesson-close:hover {
+            background: #d0d0d0;
+        }
+
+        .progress-indicator {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        .progress-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        .progress-dot.completed {
+            background: #4caf50;
+        }
+
+        .progress-dot.current {
+            background: #667eea;
+            width: 12px;
+            height: 12px;
+            margin: -2px;
+        }
+
+        .question-area {
+            margin-bottom: 30px;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .question-text {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 20px;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-btn {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+        .option-btn:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .option-btn.selected {
+            border-color: #667eea;
+            background: #e3f2fd;
+        }
+
+        .option-btn.correct {
+            border-color: #4caf50;
+            background: #e8f5e9;
+        }
+
+        .option-btn.incorrect {
+            border-color: #f44336;
+            background: #ffebee;
+        }
+
+        .flashcard {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.3s ease;
+        }
+
+        .flashcard:hover {
+            transform: scale(1.02);
+        }
+
+        .flashcard-front {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .flashcard-back {
+            font-size: 20px;
+        }
+
+        .flashcard-hint {
             font-size: 12px;
-            color: #999;
+            opacity: 0.8;
+            margin-top: 15px;
+        }
+
+        /* ===== 結果画面 ===== */
+        #resultScreen {
+            display: none;
+        }
+
+        #resultScreen.active {
             display: block;
-            font-size: 12px;
-            margin-top: 5px;
         }
 
-        .controls {
+        .result-content {
+            text-align: center;
+        }
+
+        .result-score {
+            font-size: 48px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .result-message {
+            font-size: 18px;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .result-details {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            color: #666;
+        }
+
+        .detail-value {
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* ===== ボタン ===== */
+        .btn-group {
             display: flex;
             gap: 10px;
             margin-top: 30px;
@@ -114,15 +367,23 @@
             background: #667eea;
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 12px 24px;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 14px;
-            transition: background 0.3s ease;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
         }
 
-        button:hover {
+        button:hover:not(:disabled) {
             background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         button.secondary {
@@ -134,121 +395,109 @@
             background: #d0d0d0;
         }
 
-        .counter {
-            text-align: center;
-            color: #999;
-            font-size: 12px;
-            margin-top: 20px;
-        }
-
         @media (max-width: 480px) {
             .container {
                 padding: 20px 15px;
             }
 
-            .header h1 {
-                font-size: 24px;
+            .home-header h1 {
+                font-size: 28px;
             }
 
-            .word-card {
-                padding: 15px;
+            .stats-grid {
+                grid-template-columns: 1fr;
             }
 
-            .word-english {
-                font-size: 20px;
+            .lesson-header h2 {
+                font-size: 18px;
+            }
+
+            .result-score {
+                font-size: 36px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>📚 英単語学習</h1>
-            <p>単語をタップして意味を確認しましょう</p>
+        <!-- ホーム画面 -->
+        <div id="homeScreen" class="active">
+            <div class="home-header">
+                <h1>📚 全商英検3級</h1>
+                <p>毎日コツコツ学習しましょう</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>🔥 ストリーク</h3>
+                    <div class="value" id="streakValue">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>⏱️ 総学習時間</h3>
+                    <div class="value" id="totalTimeValue">0分</div>
+                </div>
+            </div>
+
+            <div class="daily-progress">
+                <h3>本日の進捗</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="dailyProgressFill"></div>
+                </div>
+                <p style="font-size: 12px; color: #999; margin-top: 5px;">
+                    <span id="completedToday">0</span> / <span id="totalLessonsCount">0</span> レッスン完了
+                </p>
+            </div>
+
+            <div class="lessons-list" id="lessonsList"></div>
+
+            <div class="btn-group">
+                <button class="secondary" onclick="resetAllData()">全データをリセット</button>
+            </div>
         </div>
 
-        <div id="wordsList"></div>
+        <!-- レッスン画面 -->
+        <div id="lessonScreen">
+            <div class="lesson-header">
+                <h2 id="lessonTitle">レッスン</h2>
+                <button class="lesson-close" onclick="exitLesson()">×</button>
+            </div>
 
-        <div class="controls">
-            <button class="secondary" onclick="resetAllCards()">すべてリセット</button>
-            <button onclick="shuffleWords()">シャッフル</button>
+            <div class="progress-indicator" id="progressIndicator"></div>
+
+            <div class="question-area" id="questionArea"></div>
+
+            <div class="btn-group">
+                <button id="nextBtn" onclick="nextQuestion()" disabled>次へ</button>
+            </div>
         </div>
 
-        <div class="counter">
-            <span id="learnedCount">0</span> / <span id="totalCount">0</span> 単語を確認
+        <!-- 結果画面 -->
+        <div id="resultScreen">
+            <div class="result-content">
+                <h2 style="margin-bottom: 20px;">レッスン完了！</h2>
+                <div class="result-score" id="resultScore">0%</div>
+                <div class="result-message" id="resultMessage">お疲れ様でした</div>
+
+                <div class="result-details">
+                    <div class="detail-row">
+                        <span class="detail-label">正解数</span>
+                        <span class="detail-value" id="correctCount">0</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">完了時間</span>
+                        <span class="detail-value" id="completionTime">0秒</span>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button onclick="goHome()">ホームに戻る</button>
+                    <button class="secondary" onclick="retryLesson()">もう一度やる</button>
+                </div>
+            </div>
         </div>
     </div>
 
-    <script>
-        const words = [
-            { english: "Hello", meaning: "こんにちは" },
-            { english: "World", meaning: "世界" },
-            { english: "Book", meaning: "本" },
-            { english: "Teacher", meaning: "先生" },
-            { english: "Student", meaning: "学生" },
-            { english: "Computer", meaning: "コンピュータ" },
-            { english: "Language", meaning: "言語" },
-            { english: "Learning", meaning: "学習" },
-            { english: "Practice", meaning: "練習" },
-            { english: "Success", meaning: "成功" }
-        ];
-
-        let cardStates = {};
-
-        function initializeApp() {
-            document.getElementById('totalCount').textContent = words.length;
-            renderWords();
-        }
-
-        function renderWords() {
-            const wordsList = document.getElementById('wordsList');
-            wordsList.innerHTML = '';
-
-            words.forEach((word, index) => {
-                const card = document.createElement('div');
-                card.className = 'word-card';
-                if (cardStates[index]) {
-                    card.classList.add('flipped');
-                }
-
-                card.innerHTML = `
-                    <div class="word-english">${word.english}</div>
-                    <div class="word-meaning">${word.meaning}</div>
-                `;
-
-                card.onclick = () => toggleCard(index, card);
-                wordsList.appendChild(card);
-            });
-
-            updateCounter();
-        }
-
-        function toggleCard(index, card) {
-            cardStates[index] = !cardStates[index];
-            card.classList.toggle('flipped');
-            updateCounter();
-        }
-
-        function resetAllCards() {
-            cardStates = {};
-            renderWords();
-        }
-
-        function shuffleWords() {
-            for (let i = words.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [words[i], words[j]] = [words[j], words[i]];
-            }
-            resetAllCards();
-        }
-
-        function updateCounter() {
-            const learned = Object.values(cardStates).filter(v => v).length;
-            document.getElementById('learnedCount').textContent = learned;
-        }
-
-        // アプリ初期化
-        initializeApp();
-    </script>
+    <script src="lessons.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
